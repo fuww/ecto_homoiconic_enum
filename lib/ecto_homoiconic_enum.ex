@@ -142,6 +142,10 @@ defmodule EctoHomoiconicEnum do
 
         def type, do: @storage
 
+        def equal?(term1, term2), do: term1 == term2
+
+        def embed_as(_), do: :self
+
         def cast(stored) when is_integer(stored),
           do: Map.fetch(@internal_to_member, stored)
         def cast(member) when is_binary(member),
