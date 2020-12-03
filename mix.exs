@@ -12,7 +12,7 @@ defmodule EctoHomoiconicEnum.Mixfile do
     version: @version,
     elixir: "~> 1.5",
     description: @description,
-    consolidate_protocols: not Mix.env in [:dev, :test],
+    consolidate_protocols: Mix.env not in [:dev, :test],
     deps: deps(),
     package: package()
   ]
