@@ -122,7 +122,7 @@ defmodule EctoHomoiconicEnum do
       storage = EctoHomoiconicEnum.storage(list_or_mapping)
 
       if storage in [:indeterminate],
-        do: raise EctoHomoiconicEnum.ConflictingTypesError, {unquote(module), list_or_mapping}
+        do: raise(EctoHomoiconicEnum.ConflictingTypesError, {unquote(module), list_or_mapping})
 
       {member_to_internal, internal_to_member} = EctoHomoiconicEnum.mapping(list_or_mapping)
 
@@ -146,20 +146,22 @@ defmodule EctoHomoiconicEnum do
 
         def embed_as(_), do: :dump
 
-        def cast(stored) when is_integer(stored),
-          do: Map.fetch(@internal_to_member, stored)
+        if @storage == :integer do
+          def cast(stored) when is_integer(stored),
+            do: Map.fetch(@internal_to_member, stored)
+        end
         def cast(member) when is_binary(member),
           do: cast(String.to_existing_atom(member))
         def cast(member) when member in @members,
           do: {:ok, member}
         def cast(_), do: :error
 
+        def dump(stored) when stored in @internals,
+          do: {:ok, stored}
         def dump(stored) when is_binary(stored),
           do: Map.fetch(@member_to_internal, String.to_existing_atom(stored))
         def dump(stored) when is_atom(stored),
           do: Map.fetch(@member_to_internal, stored)
-        def dump(stored) when stored in @internals,
-          do: {:ok, stored}
         def dump(_), do: :error
 
         def load(internal), do: Map.fetch(@internal_to_member, internal)

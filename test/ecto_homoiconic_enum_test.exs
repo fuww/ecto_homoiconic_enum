@@ -10,6 +10,7 @@ defmodule EctoHomoiconicEnum.TestSuite do
   defenum StatusEnum, registered: 0, active: 1, inactive: 2, archived: 3
   # defenum RoleEnum, ~w(user moderator administrator)a
   defenum RoleEnum, [:user, :moderator, :administrator]
+  defenum SupplierEnum, software_supplier: "softwareSupplier"
 
   defmodule User do
     use Ecto.Schema
@@ -97,6 +98,10 @@ defmodule EctoHomoiconicEnum.TestSuite do
     assert_raise Ecto.ChangeError, fn ->
       TestRepo.insert!(%User{status: :retroactive})
     end
+  end
+
+  test "dumps a stored binary value as itself" do
+    assert SupplierEnum.dump("softwareSupplier") == {:ok, "softwareSupplier"}
   end
 
   test "reflection" do
